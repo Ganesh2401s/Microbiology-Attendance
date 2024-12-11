@@ -393,13 +393,13 @@
 
     // Reset Excel button functionality
     document.getElementById("reset-excel").addEventListener("click", () => {
-      answer = window.prompt("Do you really want to remove all attendance records? (type 'y' for YES & 'n' for NO)"); 
+      answer = window.prompt("Are you sure you want to remove all the attendance records? (type 'y' for YES & 'n' for NO)"); 
       if (answer == "y") {
           localStorage.removeItem("attendanceData");
           alert("Attendance data removed!");
         }
       else {
-        alert("Refresh the browser then.");
+        alert("Go back then.");
       }  
     });
 
