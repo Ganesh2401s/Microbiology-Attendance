@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1024px", initial-scale="1.0">
+  <title>Attendance Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: hsla(0, 0%, 85%, 0.555);
+      color: hsl(0, 0%, 16%);
+      font-weight: 600;
+    }
+    h1 {
+      text-align: center;
+      color: hsl(211, 100%, 50%);
+      padding: 20px;
+      margin-top: 0;
+    }
+    .container {
+      width: 80%;
+      max-width: 1200px;
+      margin: 30px auto;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+      background-color: hsl(0, 0%, 100%);
+      border-radius: 8px;
+      box-shadow: 0 4px 8px hsla(0, 0%, 0%, 0.1);
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+    th {
+      background-color: hsl(211, 100%, 50%);
+      color: hsl(0, 0%, 100%);
+      font-size: 1.3rem;
+    } 
+    input[type="checkbox"] {
+      width: 2rem;
+      height: 2rem;
+      
+    }
+    tr:nth-child(even) {
+      background-color: hsl(0, 0%, 98%);
+    }
+    label {
+      margin-right: 10px;
+    }
+    input[type="date"], select {
+      padding: 8px;
+      margin-top: 5px;
+      width: 40%;
+      text-align: center;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 12px 30px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+      transform: scale(1.05);
+    }
+    .attendance-form, .view-attendance, .attendance-history {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      margin-top: 30px;
+    }
+    .view-attendance {
+      margin-top: 40px;
+    }
+    .attendance-list {
+      margin-top: 20px;
+    }
+    .attendance-list ul {
+      list-style: none;
+      padding: 0;
+    }
+    .attendance-list li {
+      padding: 10px;
+      background-color: #f1f1f1;
+      margin-bottom: 8px;
+      border-radius: 5px;
+    }
+    .attendance-tile {
+      padding: 20px;
+      margin: 10px;
+      background-color: #e9ecef;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
+    .attendance-tile:hover {
+      background-color: #d6d9df;
+    }
+    .attendance-tile h4 {
+      margin: 0;
+      font-size: 18px;
+      color: #007bff;
+    }
+    .excelBtnContainer {
+      width: 100%;
+      margin: auto;
+      display: flex;
+      background-color: #fff;
+      border-radius: 0.5rem;
+    }
+    #attendance-subject{
+      width: 60%;
+      font-size: 0.7rem;
+
+    }
+    #attendance-form-inputs {
+      padding: 1rem 2rem 0.5rem 2.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1> BCAS Microbiology Attendance 2024-27 </h1>  
+
+  <div class="container">
+    <!-- Student List in Table Format -->
+    <table id="student-list">
+      <thead>
+        <tr>
+          <th>S. No.</th>
+          <th>Roll No.</th>
+          <th>Students Name</th>
+          <th>Attendance</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <!-- Save Attendance Form -->
+    <div class="attendance-form" id="attendance-form">
+      <button id="save-attendance">Save Attendance</button>
+
+      <div id="attendance-form-inputs" style="display: none;">
+        <label for="attendance-date">Enter Date (DD/MM/YYYY) :</label>
+        <input type="date" id="attendance-date"><br> <br>
+
+        <label for="attendance-subject">Select Subject :</label>
+        <select id="attendance-subject">
+
+          <option value="IMW-NB-Theory">Introduction To Microbial World - Neeru Bhagat(IMW) Theory</option>
+
+        <option value="IMW-NB-LAB">Introduction To Microbial World -Neeru Bhagat (IMW) Lab</option>
+
+        <option value="BB-PA-Theory">Basic Bacteriology - Purnima Anand (BB) Theory  </option>
+
+        <option value="BB-PG-Theory">Basic Bacteriology - Pawas Goswami (BB) Theory  </option>
+
+        <option value="BB-LAB-PA">Basic Bacteriology (BB) LAB : Purnima Anand</option>
+        <option value="BB-LAB-PG">Basic Bacteriology (BB) LAB : Pawas Goswami</option>
+
+        <option value="BCL-AS-Theory">Biochemistry Of Carbohydates and Lipid - Anita Sondhi (BCL) Theory</option>
+        <option value="BCL-CSP-Theory">Biochemistry Of Carbohydates and Lipid - Catherine S. Paul (BCL) Theory</option>
+        <option value="BCL-LAB">Biochemistry Of Carbohydates and Lipid  (BCL) LAB</option>
+        <option value="EVS">EVS-Pooja Kumari</option>
+        </select><br>
+
+        <button id="submit-attendance">Submit Attendance</button>
+      </div>
+    </div> 
+    <br>
+    <div class="excelBtnContainer">
+          <!-- Excel Download Button -->
+    <button id="download-excel">Download Excel</button>
+    <!-- Reset Excel Button -->
+    <button id="reset-excel">Reset Excel</button>
+    </div>
+    <br>
+
+
+    <!-- Attendance History -->
+    <div id="attendance-history-container" class="attendance-history">
+          <!-- Attendance History Button -->
+    <button id="attendance-history">Attendance History</button>
+    </div>
+  </div>
+      <!-- View Attendance -->
+      <div class="view-attendance" style="width: 77%; margin: auto;" >
+        <h3 style="text-align: center;">Attendance viewing window</h3>
+        <!-- <h3>View Attendance</h3>
+        <label for="view-subject">Select Subject:</label>
+        <select id="view-subject">
+        
+          <option value="IMW-NB-Theory">Introduction To Microbial World - Neeru Bhagat(IMW) Theory</option>
+  
+          <option value="IMW-NB-LAB">Introduction To Microbial World -Neeru Bhagat (IMW) Lab</option>
+  
+          <option value="BB-PA-Theory">Basic Bacteriology - Purnima Anand (BB) Theory  </option>
+  
+          <option value="BB-PG-Theory">Basic Bacteriology - Pawas Goswami (BB) Theory  </option>
+  
+          <option value="BB-LAB-PA">Basic Bacteriology (BB) LAB : Purnima Anand</option>
+          <option value="BB-LAB-PG">Basic Bacteriology (BB) LAB : Pawas Goswami</option>
+  
+          <option value="BCL-AS-Theory">Biochemistry Of Carbohydates and Lipid - Anita Sondhi (BCL) Theory</option>
+          <option value="BCL-CSP-Theory">Biochemistry Of Carbohydates and Lipid - Catherine S. Paul (BCL) Theory</option>
+          <option value="BCL-LAB">Biochemistry Of Carbohydates and Lipid  (BCL) LAB</option>
+          <option value="EVS">EVS-Pooja Kumari</option>
+        </select><br><br> -->
+  
+        <!-- <label for="view-date">Select Date (DD/MM/YYYY):</label>
+        <input type="date" id="view-date"><br><br> -->
+  
+        <button id="view-attendance-btn" style="display: none;">View Attendance</button>
+  
+        <div id="attendance-tiles" class="attendance-list"></div>
+        <div id="attendance-data" class="attendance-list"></div>
+      </div>
+
+
+  <script>
+    // Students object
+    const students = {
+    2406001: "Abhinav",
+    2406004: "Akriti Arya",
+    2406005: "Anandita Srivastav",
+    2406008: "Archana Kumari",
+    2406010: "Deepanshu Sabharwal",
+    2406011: "Devanshi Yadav",
+    2406013: "Ganesh Singh",
+    2406014: "Harshit Matoliya",
+    2406015: "Harshit Saxena",
+    2406017: "Ishita",
+    2406018: "Jasmine Prasad",
+    2406020: "Kasturi Rashmi Basumatary",
+    2406022: "Lavneet Kataria",
+    2406023: "Mansi Sagar",
+    2406024: "Muskan Thapa",
+    2406025: "Nandini Das",
+    2406027: "Nikhil",
+    2406028: "Noora Sulaiman",
+    2406029: "Pranjal",
+    2406030: "Pratham Kumar Sah",
+    2406033: "Rhishav Basak",
+    2406034: "Rhitam Basak",
+    2406036: "Sakshi",
+    2406037: "Sana Alam",
+    2406038: "Sanskar Anand Singh",
+    2406039: "Saruchi Yadav",
+    2406040: "Sayan Mandal",
+    2406041: "Shivanshi Pandey",
+    2406042: "Shraddha Yadav",
+    2406043: "Soubhagya Sindhu",
+    2406044: "Spandan Chakroborty",
+    2406045: "Sugandha Kumari",
+    2406046: "Tanisha Das",
+    2406049: "Vanya Jain",
+    2406050: "Vinilda Vincent",
+    2406053: "Himanshu Kumar Yadav",
+    2406054: "Yathartha Singh" ,
+    2406055: "Himanshu Kumar",
+    2406056: "Sanjaya Srivastava",
+    2406057 : "Krishna Parmar",
+    2406058 :"Sandeep",
+    
+};
+
+    // Generate student list in table format
+    const studentListContainer = document.getElementById("student-list").getElementsByTagName("tbody")[0];
+    let serialNo = 1;
+    Object.keys(students).forEach(rollNumber => {
+      const studentRow = document.createElement("tr");
+      studentRow.innerHTML = `
+        <td>${serialNo++}</td>
+        <td>${rollNumber}</td>
+        <td>${students[rollNumber]}</td>
+        <td><input type="checkbox" id="attendance-${rollNumber}" /></td>
+      `;
+      studentListContainer.appendChild(studentRow);
+    });
+
+    // Handle Save Attendance button click
+    document.getElementById("save-attendance").addEventListener("click", () => {
+      // Automatically set today's date in the date input field
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById("attendance-date").value = today;
+
+      document.getElementById("attendance-form-inputs").style.display = "block";
+    });
+
+    // Handle Submit Attendance
+    document.getElementById("submit-attendance").addEventListener("click", () => {
+      const date = document.getElementById("attendance-date").value;
+      const subject = document.getElementById("attendance-subject").value;
+      const attendance = {};
+
+      // Collect attendance data
+      Object.keys(students).forEach(rollNumber => {
+        const status = document.getElementById(`attendance-${rollNumber}`).checked ? "Present" : "Absent";
+        attendance[rollNumber] = { name: students[rollNumber], status };
+      });
+
+      // Save to localStorage
+      const attendanceData = JSON.parse(localStorage.getItem("attendanceData")) || {};
+      if (!attendanceData[subject]) {
+        attendanceData[subject] = {};
+      }
+      attendanceData[subject][date] = attendance;
+      localStorage.setItem("attendanceData", JSON.stringify(attendanceData));
+
+      alert("Attendance saved!");
+      document.getElementById("attendance-form-inputs").style.display = "none";
+    });
+
+    // View Attendance functionality
+    document.getElementById("view-attendance-btn").addEventListener("click", () => {
+      const subject = document.getElementById("view-subject").value;
+      const date = document.getElementById("view-date").value;
+      const attendanceData = JSON.parse(localStorage.getItem("attendanceData"));
+      const subjectData = attendanceData ? attendanceData[subject] : {};
+      const dateData = subjectData ? subjectData[date] : {};
+
+      let tilesOutput = "";
+      if (dateData) {
+        tilesOutput += `
+          <div class="attendance-tile" onclick="viewFullAttendance('${subject}', '${date}')">
+            <h4>Attendance of ${subject} on ${date}</h4>
+          </div>
+        `;
+      } else {
+        tilesOutput = `<p>No data found for ${subject} on ${date}.</p>`;
+      }
+
+      document.getElementById("attendance-tiles").innerHTML = tilesOutput;
+    });
+
+    // View full attendance when a tile is clicked
+    function viewFullAttendance(subject, date) {
+      const attendanceData = JSON.parse(localStorage.getItem("attendanceData"));
+      const subjectData = attendanceData[subject];
+      const dateData = subjectData[date];
+
+      let output = `<h4>Attendance for ${subject} on ${date}</h4><ul>`;
+      Object.keys(dateData).forEach(rollNumber => {
+        const student = dateData[rollNumber];
+        output += `<li>${student.name} - ${student.status}</li>`;
+      });
+      output += "</ul>";
+      document.getElementById("attendance-data").innerHTML = output;
+    }
+
+    // Excel export functionality
+    document.getElementById("download-excel").addEventListener("click", () => {
+      const attendanceData = JSON.parse(localStorage.getItem("attendanceData"));
+      const sheet = [];
+      sheet.push(["Subject", "Date", "Roll No", "Student Name", "Status"]);
+      
+      Object.keys(attendanceData).forEach(subject => {
+        Object.keys(attendanceData[subject]).forEach(date => {
+          Object.keys(attendanceData[subject][date]).forEach(rollNumber => {
+            const student = attendanceData[subject][date][rollNumber];
+            sheet.push([subject, date, rollNumber, student.name, student.status]);
+          });
+        });
+      });
+
+      let csvContent = "data:text/csv;charset=utf-8,";
+      sheet.forEach(row => {
+        csvContent += row.join(",") + "\r\n";
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "attendance_data.csv");
+      link.click();
+    });
+
+    // Reset Excel button functionality
+    document.getElementById("reset-excel").addEventListener("click", () => {
+      answer = window.prompt("Do you really want to remove all attendance records? (type 'y' for YES & 'n' for NO)"); 
+      if (answer == "y") {
+          localStorage.removeItem("attendanceData");
+          alert("Attendance data removed!");
+        }
+      else {
+        alert("Refresh the browser then.");
+      }  
+    });
+
+    // Show Attendance History functionality
+    document.getElementById("attendance-history").addEventListener("click", () => {
+      const attendanceData = JSON.parse(localStorage.getItem("attendanceData"));
+      const historyContainer = document.getElementById("attendance-history-container");
+      
+      if (!attendanceData) {
+        historyContainer.innerHTML = "<p>No attendance history found.</p>";
+        return;
+      }
+
+      let historyOutput = "<h3>Attendance History</h3>";
+
+      Object.keys(attendanceData).forEach(subject => {
+        Object.keys(attendanceData[subject]).forEach(date => {
+          historyOutput += `
+            <div class="attendance-tile" onclick="viewFullAttendance('${subject}', '${date}')">
+              <h4>${subject} - ${date}</h4>
+            </div>
+          `;
+        });
+      });
+
+      historyContainer.innerHTML = historyOutput;
+    });
+
+        // Delete Attendance Record
+        function deleteAttendance(subject, date, rollNumber) {
+      const key = `${subject}-${date}`;
+      const attendanceData = JSON.parse(localStorage.getItem(key));
+      const updatedData = attendanceData.filter(item => item.rollNumber !== rollNumber);
+      localStorage.setItem(key, JSON.stringify(updatedData));
+
+      const attendanceContainer = document.getElementById("attendance-data");
+      const tileToDelete = Array.from(attendanceContainer.children).find(tile => tile.querySelector("h4").textContent.includes(rollNumber));
+      
+      tileToDelete.classList.add("fade-out");
+      setTimeout(() => tileToDelete.remove(), 500); // Wait for animation before removal
+        }
+
+  </script>
+</body>
+</html>
